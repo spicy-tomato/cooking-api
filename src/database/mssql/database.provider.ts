@@ -2,6 +2,7 @@ import { Provider } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { Account } from 'src/models/account/account.entity';
 import { Country } from 'src/models/country/country.entity';
+import { Image } from 'src/models/upload/entities/image.entity';
 
 export const databaseProvider: Provider[] = [
   {
@@ -9,10 +10,10 @@ export const databaseProvider: Provider[] = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'mssql',
-        host: '14.225.255.234',
+        host: '',
         port: 1433,
-        username: 'btl_mobile_login',
-        password: 'sqlserver@Mobile-2',
+        username: '',
+        password: '',
         database: 'CookingApp',
         define: {
           freezeTableName: true,
@@ -21,7 +22,7 @@ export const databaseProvider: Provider[] = [
         },
       });
 
-      sequelize.addModels([Country, Account]);
+      sequelize.addModels([Country, Account, Image]);
 
       // await sequelize.sync();
       return sequelize;
