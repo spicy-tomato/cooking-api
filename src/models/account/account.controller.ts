@@ -1,18 +1,16 @@
 import {
-  BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
   Query,
-  UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
-import { JwtValidateResponseDto } from 'src/authentication/dto';
 import { AuthUser, Public } from 'src/common/decorators';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { TypeHelper } from 'src/common/helpers';
+import { ToNumberPipe } from 'src/common/pipes';
 import { Account } from './account.entity';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto';
@@ -24,35 +22,34 @@ export class AccountController {
   @Post()
   @Public()
   async signUp(@Body() accountDto: CreateAccountDto): Promise<Account> {
-    return this.accountService.create(accountDto);
+    return this.accountService.create(accountDto).catch((e) => {
+      if (e.name === 'SequelizeUniqueConstraintError') {
+        throw new HttpException(
+          {
+            message: 'This username already exists',
+          },
+          HttpStatus.CONFLICT,
+        );
+      }
+      throw e;
+    });
   }
 
   @Patch('set-avatar/:id')
-  @UseGuards(JwtAuthGuard)
   async setAvatar(
-    @Param('id') idAccount: string,
-    @Query('idImage') idImage: string,
-    @AuthUser() jwtUser: JwtValidateResponseDto,
+    @Param('id', ToNumberPipe) idAccount: number,
+    @Query('idImage', ToNumberPipe) idImage: number,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @AuthUser({ loc: 'params', key: 'id' }) _: any,
   ): Promise<boolean> {
-    const idAccount_n = parseInt(idAccount);
-    const idImage_n = parseInt(idImage);
-
-    if (!TypeHelper.isNumber(idImage_n) || !TypeHelper.isNumber(idAccount_n)) {
-      throw new BadRequestException();
-    }
-
-    if (`${jwtUser.userId}` !== idAccount) {
-      throw new UnauthorizedException();
-    }
-
     const imageIsValid =
-      (await this.accountService.setAvatar(idAccount_n, idImage_n)) > 0;
+      (await this.accountService.setAvatar(idAccount, idImage)) > 0;
 
     if (!imageIsValid) {
-      throw new BadRequestException();
+      throw new ForbiddenException();
     }
 
-    await this.accountService.unsetAvatar(idAccount_n, idImage_n);
+    await this.accountService.unsetAvatar(idAccount, idImage);
     return true;
   }
 }

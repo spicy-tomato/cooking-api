@@ -1,8 +1,17 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  AutoIncrement,
+  Column,
+  DataType,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
 
 @Table
 export class Image extends Model {
-  @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
   id: number;
 
   @Column(DataType.STRING)
