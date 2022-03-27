@@ -8,6 +8,8 @@ import { Observable } from 'rxjs';
 interface LocalFileInterceptorOptions {
   fieldName: string;
   path?: string;
+  fileFilter?: MulterOptions['fileFilter'];
+  limits?: MulterOptions['limits'];
 }
 
 function LocalFileInterceptor(
@@ -21,9 +23,9 @@ function LocalFileInterceptor(
       const destination = `${fileDestination}${options.path}`;
 
       const multerOptions: MulterOptions = {
-        storage: diskStorage({
-          destination,
-        }),
+        storage: diskStorage({ destination }),
+        fileFilter: options.fileFilter,
+        limits: options.limits,
       };
 
       this.fileInterceptor = new (FileInterceptor(

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Param,
@@ -10,13 +11,30 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageDto } from './dto';
 import { UploadService } from './upload.service';
 import { File } from '../file/entities';
+import LocalFileInterceptor from 'src/common/interceptors/local-file.interceptor';
 
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
   @Post('image/:id')
-  @UseInterceptors(FileInterceptor('file', { dest: './images' }))
+  @UseInterceptors(
+    LocalFileInterceptor({
+      fieldName: 'file',
+      fileFilter: (req, file, callback) => {
+        if (!file.mimetype.includes('image')) {
+          return callback(
+            new BadRequestException('Provide a valid image'),
+            false,
+          );
+        }
+        callback(null, true);
+      },
+      limits: {
+        fileSize: Math.pow(1024, 2),
+      },
+    }),
+  )
   async uploadFile(
     @Param('id') id: number,
     @UploadedFile() file: Express.Multer.File,
