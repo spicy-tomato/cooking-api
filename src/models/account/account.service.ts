@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Op } from 'sequelize';
 import { StringHelper } from 'src/common/helpers';
 import { Image } from '../upload/entities/image.entity';
 import { Account } from './account.entity';
@@ -24,22 +25,27 @@ export class AccountService {
     return this.accountRepository.findOne({ where: { username } });
   }
 
-  async setAvatar(id: number): Promise<number> {
+  async setAvatar(idAccount: number, id: number): Promise<number> {
     return this.imageRepository
       .update(
         { type: 0 },
         {
-          where: { id },
+          where: { id, idAccount },
         },
       )
       .then((x) => x[0]);
   }
 
-  async unsetAvatar(idAccount: number): Promise<void> {
+  async unsetAvatar(idAccount: number, idNewAvatar: number): Promise<void> {
     this.imageRepository.update(
       { type: 1 },
       {
-        where: { idAccount, type: 0 },
+        where: {
+          idAccount,
+          id: {
+            [Op.ne]: idNewAvatar,
+          },
+        },
       },
     );
   }
