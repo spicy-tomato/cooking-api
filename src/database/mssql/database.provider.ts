@@ -2,7 +2,7 @@ import { Provider } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { Account } from 'src/models/account/account.entity';
 import { Country } from 'src/models/country/country.entity';
-import { Image } from 'src/models/upload/entities/image.entity';
+import { File } from 'src/models/file/entities';
 
 export const databaseProvider: Provider[] = [
   {
@@ -22,7 +22,7 @@ export const databaseProvider: Provider[] = [
         },
       });
 
-      sequelize.addModels([Country, Account, Image]);
+      sequelize.addModels([Country, Account, File]);
 
       // await sequelize.sync();
       return sequelize;

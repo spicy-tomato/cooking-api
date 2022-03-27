@@ -8,7 +8,7 @@ import {
 } from 'sequelize-typescript';
 
 @Table
-export class Image extends Model {
+export class File extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -17,7 +17,7 @@ export class Image extends Model {
   @Column(DataType.STRING)
   name: string;
 
-  @Column({ type: DataType.DATE })
+  @Column(DataType.DATE)
   uploadedAt: Date;
 
   @Column(DataType.INTEGER)
@@ -25,4 +25,7 @@ export class Image extends Model {
 
   @Column(DataType.INTEGER)
   type: number;
+
+  @Column(DataType.STRING)
+  mimeType: string;
 }

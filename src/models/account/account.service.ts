@@ -1,17 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Op } from 'sequelize';
+import { RepositoryConstant } from 'src/common/constants';
 import { StringHelper } from 'src/common/helpers';
-import { Image } from '../upload/entities/image.entity';
+import { File } from '../file/entities';
 import { Account } from './account.entity';
 import { CreateAccountDto } from './dto';
 
 @Injectable()
 export class AccountService {
   constructor(
-    @Inject('ACCOUNT_REPOSITORY')
+    @Inject(RepositoryConstant.ACCOUNT)
     private readonly accountRepository: typeof Account,
-    @Inject('IMAGE_REPOSITORY')
-    private readonly imageRepository: typeof Image,
+    @Inject(RepositoryConstant.IMAGE)
+    private readonly imageRepository: typeof File,
   ) {}
 
   async create(accountDto: CreateAccountDto): Promise<Account> {

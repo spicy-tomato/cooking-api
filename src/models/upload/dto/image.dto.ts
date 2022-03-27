@@ -3,4 +3,5 @@ export class UploadImageDto {
   uploadedAt: Date;
   idAccount: number;
   type: number;
+  mimeType: string;
 }

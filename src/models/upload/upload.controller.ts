@@ -9,7 +9,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageDto } from './dto';
 import { UploadService } from './upload.service';
-import { Image } from './entities/image.entity';
+import { File } from '../file/entities';
 
 @Controller('upload')
 export class UploadController {
@@ -21,11 +21,12 @@ export class UploadController {
     @Param('id') id: number,
     @UploadedFile() file: Express.Multer.File,
     @Body() body: UploadImageDto,
-  ): Promise<Image> {
+  ): Promise<File> {
     return this.uploadService.uploadImage({
       idAccount: id,
       name: file.filename,
       type: body.type,
+      mimeType: file.mimetype,
       uploadedAt: new Date(),
     });
   }

@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { RepositoryConstant } from 'src/common/constants';
 import { Country } from './country.entity';
 
 @Injectable()
 export class CountryService {
   constructor(
-    @Inject('COUNTRY_REPOSITORY')
+    @Inject(RepositoryConstant.COUNTRY)
     private readonly countryRepository: typeof Country,
   ) {}
 

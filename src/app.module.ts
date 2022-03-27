@@ -5,9 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './authentication/auth.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
-import { DatabaseModule } from './database/mssql/database.module';
 import { AccountModule } from './models/account/account.module';
 import { CountryModule } from './models/country/country.module';
+import { FileModule } from './models/file/file.module';
 import { UploadModule } from './models/upload/upload.module';
 
 @Module({
@@ -17,11 +17,11 @@ import { UploadModule } from './models/upload/upload.module';
       isGlobal: true,
       cache: true,
     }),
-    DatabaseModule,
     AuthModule,
     CountryModule,
     AccountModule,
     UploadModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [

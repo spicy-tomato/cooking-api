@@ -1,10 +1,10 @@
 import { Provider } from '@nestjs/common';
 import { RepositoryConstant } from 'src/common/constants';
-import { File } from '../file/entities';
+import { File } from './entities/image.entity';
 
-export const uploadProvider: Provider[] = [
+export const fileProvider: Provider[] = [
   {
-    provide: RepositoryConstant.IMAGE,
+    provide: RepositoryConstant.FILE,
     useValue: File,
   },
 ];
