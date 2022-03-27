@@ -13,6 +13,7 @@ export class AuthService {
 
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.accountService.findOne(username);
+
     if (user && StringHelper.getMd5(password) === user.password) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
@@ -21,8 +22,7 @@ export class AuthService {
     return null;
   }
 
-  async login(account: any) {
-    console.log('payload', account);
+  login(account: any): { access_token: string } {
     const payload: JwtPayload = { username: account.username, sub: account.id };
     return {
       access_token: this.jwtService.sign(payload),
