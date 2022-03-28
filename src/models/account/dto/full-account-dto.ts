@@ -1,4 +1,4 @@
-export class AccountDto {
+export class FullAccountDto {
   id: number;
   username: string;
   password: string;

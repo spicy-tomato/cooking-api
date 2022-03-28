@@ -6,9 +6,11 @@ import { AppService } from './app.service';
 import { AuthModule } from './authentication/auth.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { AccountModule } from './models/account/account.module';
+import { accountProvider } from './models/account/account.provider';
 import { CountryModule } from './models/country/country.module';
 import { FileModule } from './models/file/file.module';
 import { FoodModule } from './models/food/food.module';
+import { foodProvider } from './models/food/food.provider';
 import { UploadModule } from './models/upload/upload.module';
 
 @Module({
@@ -32,6 +34,8 @@ import { UploadModule } from './models/upload/upload.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    ...foodProvider,
+    ...accountProvider,
   ],
 })
 export class AppModule {}

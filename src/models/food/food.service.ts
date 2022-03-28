@@ -62,6 +62,9 @@ export class FoodService {
   async findByAccountId(id: number): Promise<Food[]> {
     return this.foodRepository.findAll({
       where: { idOwner: id },
+      attributes: {
+        exclude: ['idImage', 'idOwner'],
+      },
       include: [
         { model: Country, as: 'country' },
         {
@@ -71,17 +74,20 @@ export class FoodService {
           },
         },
       ],
-      attributes: {
-        exclude: ['idImage', 'idOwner'],
-      },
     });
   }
 
   async find(idFood: number): Promise<Food> {
     return this.foodRepository.findByPk(idFood, {
+      attributes: {
+        exclude: ['idImage', 'idOwner', 'countryCode'],
+      },
       include: [
         {
           model: Account,
+          attributes: {
+            exclude: ['password', 'idAccount', 'idImage'],
+          },
           include: [
             {
               model: File,
@@ -90,9 +96,6 @@ export class FoodService {
               },
             },
           ],
-          attributes: {
-            exclude: ['password', 'idAccount', 'idImage'],
-          },
         },
         {
           model: Country,
@@ -120,9 +123,6 @@ export class FoodService {
           },
         },
       ],
-      attributes: {
-        exclude: ['idImage', 'idOwner'],
-      },
     });
   }
 

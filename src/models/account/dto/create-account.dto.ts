@@ -1,3 +1,3 @@
-import { AccountDto } from './account-dto';
+import { FullAccountDto } from './full-account-dto';
 
-export type CreateAccountDto = Omit<AccountDto, 'id'>;
+export type CreateAccountDto = Omit<FullAccountDto, 'id'>;
