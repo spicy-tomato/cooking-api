@@ -4,13 +4,11 @@ import {
   ForbiddenException,
   HttpException,
   HttpStatus,
-  Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
-import { AuthUser, Public } from 'src/common/decorators';
-import { ToNumberPipe } from 'src/common/pipes';
+import { JwtValidateResponseDto } from 'src/authentication/dto';
+import { JwtUser, Public } from 'src/common/decorators';
 import { Account } from './account.entity';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto';
@@ -35,21 +33,19 @@ export class AccountController {
     });
   }
 
-  @Patch('set-avatar/:id')
+  @Patch('set-avatar')
   async setAvatar(
-    @Param('id', ToNumberPipe) idAccount: number,
-    @Query('idImage', ToNumberPipe) idImage: number,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @AuthUser({ loc: 'params', key: 'id' }) _: any,
+    @Body() body: { idImage: number },
+    @JwtUser() user: JwtValidateResponseDto,
   ): Promise<boolean> {
     const imageIsValid =
-      (await this.accountService.setAvatar(idAccount, idImage)) > 0;
+      (await this.accountService.setAvatar(user.idAccount, body.idImage)) > 0;
 
     if (!imageIsValid) {
       throw new ForbiddenException();
     }
 
-    await this.accountService.unsetAvatar(idAccount, idImage);
+    await this.accountService.unsetAvatar(user.idAccount, body.idImage);
     return true;
   }
 }

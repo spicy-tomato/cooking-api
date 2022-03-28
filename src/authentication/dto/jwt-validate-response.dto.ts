@@ -1,4 +1,4 @@
 export class JwtValidateResponseDto {
-  userId: number;
+  idAccount: number;
   username: string;
 }

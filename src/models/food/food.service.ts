@@ -47,7 +47,15 @@ export class FoodService {
   async findByAccountId(id: number): Promise<Food[]> {
     return this.foodRepository.findAll({
       where: { idOwner: id },
-      include: [{ model: Country, as: 'country' }],
+      include: [
+        { model: Country, as: 'country' },
+        {
+          model: File,
+          attributes: {
+            exclude: ['id', 'idAccount'],
+          },
+        },
+      ],
       attributes: {
         exclude: ['idImage', 'idOwner'],
       },

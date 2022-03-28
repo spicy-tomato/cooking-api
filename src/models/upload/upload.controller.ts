@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Param,
   Post,
   UploadedFile,
   UploadedFiles,
@@ -13,20 +12,22 @@ import { File } from '../file/entities';
 import LocalImageFileInterceptor from 'src/common/interceptors/local-image-file.interceptor';
 import LocalImageFilesInterceptor from 'src/common/interceptors/local-image-files.interceptor';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { JwtValidateResponseDto } from 'src/authentication/dto';
+import { JwtUser } from 'src/common/decorators';
 
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
-  @Post('image/:id')
+  @Post('image')
   @UseInterceptors(LocalImageFileInterceptor('file'))
   async uploadImage(
-    @Param('id') id: number,
     @UploadedFile() file: Express.Multer.File,
     @Body() body: UploadImageDto,
+    @JwtUser() user: JwtValidateResponseDto,
   ): Promise<File> {
     return this.uploadService.uploadImage({
-      idAccount: id,
+      idAccount: user.idAccount,
       name: file.filename,
       type: body.type,
       mimeType: file.mimetype,

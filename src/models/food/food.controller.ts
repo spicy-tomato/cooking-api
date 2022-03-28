@@ -8,8 +8,9 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
+import { JwtValidateResponseDto } from 'src/authentication/dto';
 import { AppConstants } from 'src/common/constants';
-import { AuthUser } from 'src/common/decorators';
+import { JwtUser } from 'src/common/decorators';
 import LocalImageFileFieldsInterceptor from 'src/common/interceptors/local-image-file-fields.interceptor';
 import { ToNumberPipe } from 'src/common/pipes';
 import { UploadService } from '../upload/upload.service';
@@ -36,7 +37,7 @@ export class FoodController {
     return this.foodService.details(idAccount);
   }
 
-  @Post(':id')
+  @Post()
   @UseInterceptors(
     LocalImageFileFieldsInterceptor([
       { name: 'mainImage', maxCount: 1 },
@@ -44,18 +45,16 @@ export class FoodController {
     ]),
   )
   async create(
-    @Param('id', ToNumberPipe) idAccount: number,
     @UploadedFiles()
     files: {
       mainImage: Array<Express.Multer.File>;
       stepImages: Array<Express.Multer.File>;
     },
     @Body() body: CreateFoodDto,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @AuthUser({ loc: 'params', key: 'id' }) _: any,
+    @JwtUser() user: JwtValidateResponseDto,
   ): Promise<Food> {
     const image = await this.uploadService.uploadImage({
-      idAccount,
+      idAccount: user.idAccount,
       name: files.mainImage[0].filename,
       type: 2,
       mimeType: files.mainImage[0].mimetype,
@@ -64,7 +63,7 @@ export class FoodController {
 
     const food = await this.foodService.create(
       { ...body, timePost: new Date() },
-      idAccount,
+      user.idAccount,
       image.id,
     );
 
@@ -72,7 +71,7 @@ export class FoodController {
 
     const stepImages = await this.uploadService.uploadImages(
       files.stepImages.map((f) => ({
-        idAccount,
+        idAccount: user.idAccount,
         name: f.filename,
         type: 3,
         mimeType: f.mimetype,
