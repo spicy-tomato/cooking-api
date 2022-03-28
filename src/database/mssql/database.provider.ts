@@ -3,6 +3,8 @@ import { Sequelize } from 'sequelize-typescript';
 import { Account } from 'src/models/account/account.entity';
 import { Country } from 'src/models/country/country.entity';
 import { File } from 'src/models/file/entities';
+import { Food } from 'src/models/food/entities/food.entity';
+import { StepDetails } from 'src/models/food/entities/step-details.entity';
 
 export const databaseProvider: Provider[] = [
   {
@@ -22,7 +24,7 @@ export const databaseProvider: Provider[] = [
         },
       });
 
-      sequelize.addModels([Country, Account, File]);
+      sequelize.addModels([Country, Account, File, Food, StepDetails]);
 
       // await sequelize.sync();
       return sequelize;

@@ -4,39 +4,42 @@ import {
   Column,
   DataType,
   ForeignKey,
-  HasMany,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { Food } from '../food/entities/food.entity';
+import { Food } from './food.entity';
 import { File } from 'src/models/file/entities';
 
 @Table
-export class Account extends Model {
+export class StepDetails extends Model {
   /** COLUMNS */
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
   id: number;
 
-  @Column(DataType.STRING)
-  username: string;
+  @Column(DataType.INTEGER)
+  @ForeignKey(() => Food)
+  idFood: number;
 
   @Column(DataType.STRING)
-  password: string;
+  name: string;
+
+  @Column(DataType.INTEGER)
+  stepNumber: number;
 
   @Column(DataType.STRING)
-  fullName: string;
+  description: string;
 
   @Column(DataType.INTEGER)
   @ForeignKey(() => File)
   idImage: number;
 
   /** RELATIONS */
-  @HasMany(() => Food, 'idOwner')
-  foods: Food[];
+  @BelongsTo(() => Food, 'idFood')
+  owner: Food;
 
   @BelongsTo(() => File, 'idImage')
-  image: File;
+  images: File;
 }

@@ -1,12 +1,13 @@
 import { Injectable, mixin, NestInterceptor, Type } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { diskStorage } from 'multer';
 import { Observable } from 'rxjs';
+import { AppConstants } from '../constants';
 import { LocalFileInterceptorOptions } from './models';
 
-function LocalFileInterceptor(
+function LocalFilesInterceptor(
   fieldName: string,
   options: LocalFileInterceptorOptions,
 ): Type<NestInterceptor> {
@@ -23,7 +24,11 @@ function LocalFileInterceptor(
         limits: options.limits,
       };
 
-      this.fileInterceptor = new (FileInterceptor(fieldName, multerOptions))();
+      this.fileInterceptor = new (FilesInterceptor(
+        fieldName,
+        AppConstants.MAX_FILES_UPLOAD_IN_ONCE,
+        multerOptions,
+      ))();
     }
 
     intercept(
@@ -36,4 +41,4 @@ function LocalFileInterceptor(
   return mixin(Interceptor);
 }
 
-export default LocalFileInterceptor;
+export default LocalFilesInterceptor;

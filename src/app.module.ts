@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { AccountModule } from './models/account/account.module';
 import { CountryModule } from './models/country/country.module';
 import { FileModule } from './models/file/file.module';
+import { FoodModule } from './models/food/food.module';
 import { UploadModule } from './models/upload/upload.module';
 
 @Module({
@@ -22,6 +23,7 @@ import { UploadModule } from './models/upload/upload.module';
     AccountModule,
     UploadModule,
     FileModule,
+    FoodModule,
   ],
   controllers: [AppController],
   providers: [

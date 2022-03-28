@@ -12,5 +12,6 @@ export const AuthUser = createParamDecorator(
     if (`${jwtUser.userId}` !== `${idAccount}`) {
       throw new UnauthorizedException();
     }
+    return idAccount;
   },
 );

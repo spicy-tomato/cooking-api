@@ -2,5 +2,6 @@
   "cSpell.words": [
     "cookingappapi",
   ],
-  "material-icon-theme.activeIconPack": "nest"
+  "material-icon-theme.activeIconPack": "nest",
+  "prettier.endOfLine": "lf"
 }

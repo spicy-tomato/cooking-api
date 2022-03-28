@@ -17,4 +17,13 @@ export class UploadService {
       uploadedAt: Sequelize.fn('GETDATE'),
     });
   }
+
+  async uploadImages(uploadImageDtos: UploadImageDto[]): Promise<File[]> {
+    return this.imageRepository.bulkCreate(
+      uploadImageDtos.map((uploadImageDto) => ({
+        ...uploadImageDto,
+        uploadedAt: Sequelize.fn('GETDATE'),
+      })),
+    );
+  }
 }
