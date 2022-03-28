@@ -1,7 +1,5 @@
 import {
   AutoIncrement,
-  BelongsTo,
-  BelongsToMany,
   Column,
   DataType,
   HasOne,
@@ -10,8 +8,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Account } from 'src/models/account/account.entity';
-import { Food } from 'src/models/food/entities/food.entity';
-import { StepDetails } from 'src/models/food/entities/step-details.entity';
+import { Food, StepDetails } from 'src/models/food/entities';
 
 @Table
 export class File extends Model {

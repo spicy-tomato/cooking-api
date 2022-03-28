@@ -8,7 +8,6 @@ export class CreateFoodDto {
   difficultLevel: number;
   timeToCook: number;
   countryCode: string;
-  timePost: Date;
   ingredient: string;
   tips: string;
   steps: StepDto[];

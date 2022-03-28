@@ -3,8 +3,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { Account } from 'src/models/account/account.entity';
 import { Country } from 'src/models/country/country.entity';
 import { File } from 'src/models/file/entities';
-import { Food } from 'src/models/food/entities/food.entity';
-import { StepDetails } from 'src/models/food/entities/step-details.entity';
+import { Food, Rate, StepDetails } from 'src/models/food/entities';
 
 export const databaseProvider: Provider[] = [
   {
@@ -12,6 +11,7 @@ export const databaseProvider: Provider[] = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'mssql',
+        dialectOptions: { timezone: '+07:00' },
         host: process.env.DATABASE_HOST,
         port: 1433,
         username: process.env.DATABASE_USER,
@@ -24,7 +24,7 @@ export const databaseProvider: Provider[] = [
         },
       });
 
-      sequelize.addModels([Country, Account, File, Food, StepDetails]);
+      sequelize.addModels([Country, Account, File, Food, StepDetails, Rate]);
 
       // await sequelize.sync();
       return sequelize;

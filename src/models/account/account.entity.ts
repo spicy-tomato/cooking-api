@@ -9,8 +9,8 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { Food } from '../food/entities/food.entity';
 import { File } from 'src/models/file/entities';
+import { Food } from '../food/entities';
 
 @Table
 export class Account extends Model {

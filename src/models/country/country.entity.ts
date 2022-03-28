@@ -6,7 +6,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { Food } from '../food/entities/food.entity';
+import { Food } from '../food/entities';
 
 @Table
 export class Country extends Model {

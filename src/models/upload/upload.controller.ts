@@ -31,7 +31,6 @@ export class UploadController {
       name: file.filename,
       type: body.type,
       mimeType: file.mimetype,
-      uploadedAt: new Date(),
     });
   }
 

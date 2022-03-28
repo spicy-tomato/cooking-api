@@ -14,8 +14,8 @@ import { JwtUser } from 'src/common/decorators';
 import LocalImageFileFieldsInterceptor from 'src/common/interceptors/local-image-file-fields.interceptor';
 import { ToNumberPipe } from 'src/common/pipes';
 import { UploadService } from '../upload/upload.service';
-import { CreateFoodDto } from './dto';
-import { Food } from './entities/food.entity';
+import { CreateFoodDto, CreateRateDto } from './dto';
+import { Food, Rate } from './entities';
 import { FoodService } from './food.service';
 
 @Controller('food')
@@ -33,8 +33,8 @@ export class FoodController {
   }
 
   @Get(':id')
-  async getById(@Param('id', ToNumberPipe) idAccount: number): Promise<Food> {
-    return this.foodService.details(idAccount);
+  async getById(@Param('id', ToNumberPipe) id: number): Promise<Food> {
+    return this.foodService.find(id);
   }
 
   @Post()
@@ -58,16 +58,9 @@ export class FoodController {
       name: files.mainImage[0].filename,
       type: 2,
       mimeType: files.mainImage[0].mimetype,
-      uploadedAt: new Date(),
     });
 
-    const food = await this.foodService.create(
-      { ...body, timePost: new Date() },
-      user.idAccount,
-      image.id,
-    );
-
-    console.log(body);
+    const food = await this.foodService.create(body, user.idAccount, image.id);
 
     const stepImages = await this.uploadService.uploadImages(
       files.stepImages.map((f) => ({
@@ -75,12 +68,25 @@ export class FoodController {
         name: f.filename,
         type: 3,
         mimeType: f.mimetype,
-        uploadedAt: new Date(),
       })),
     );
 
     await this.foodService.createSteps(body, food.id, stepImages);
 
     return food;
+  }
+
+  @Get(':id/rating')
+  async getRate(@Param('id', ToNumberPipe) id: number): Promise<Rate[]> {
+    return this.foodService.findRate(id);
+  }
+
+  @Post(':id/rating')
+  async createRate(
+    @Body() body: CreateRateDto,
+    @Param('id', ToNumberPipe) id: number,
+    @JwtUser() user: JwtValidateResponseDto,
+  ): Promise<Rate> {
+    return this.foodService.createRate(body, user.idAccount, id);
   }
 }

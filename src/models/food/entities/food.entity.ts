@@ -12,6 +12,7 @@ import {
 import { File } from 'src/models/file/entities';
 import { Account } from '../../account/account.entity';
 import { Country } from '../../country/country.entity';
+import { Rate } from './rate.entity';
 import { StepDetails } from './step-details.entity';
 
 @Table
@@ -64,6 +65,14 @@ export class Food extends Model {
   @Column(DataType.INTEGER)
   voteCount: number;
 
+  @Column({
+    type: DataType.VIRTUAL,
+    get(): number {
+      return this.getDataValue('rateSum') / this.getDataValue('voteCount');
+    },
+  })
+  voteAvg: number;
+
   /** RELATIONS */
   @BelongsTo(() => Account, 'idOwner')
   owner: Account;
@@ -76,4 +85,7 @@ export class Food extends Model {
 
   @HasMany(() => StepDetails, 'idFood')
   steps: StepDetails[];
+
+  @HasMany(() => Rate, 'idFood')
+  rates: Rate[];
 }

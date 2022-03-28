@@ -4,9 +4,9 @@ import { RepositoryConstant } from 'src/common/constants';
 import { Account } from '../account/account.entity';
 import { Country } from '../country/country.entity';
 import { File } from '../file/entities';
+import { CreateRateDto } from './dto';
 import { CreateFoodDto } from './dto/create-food.dto';
-import { Food } from './entities/food.entity';
-import { StepDetails } from './entities/step-details.entity';
+import { Food, Rate, StepDetails } from './entities';
 
 @Injectable()
 export class FoodService {
@@ -15,6 +15,8 @@ export class FoodService {
     private readonly foodRepository: typeof Food,
     @Inject(RepositoryConstant.STEP)
     private readonly stepRepository: typeof StepDetails,
+    @Inject(RepositoryConstant.RATE)
+    private readonly rateRepository: typeof Rate,
   ) {}
 
   async create(
@@ -44,6 +46,19 @@ export class FoodService {
     );
   }
 
+  async createRate(
+    rateDto: CreateRateDto,
+    idOwner: number,
+    idFood: number,
+  ): Promise<Rate> {
+    return this.rateRepository.create({
+      ...rateDto,
+      idOwner,
+      idFood,
+      timeCreated: Sequelize.fn('GETDATE'),
+    });
+  }
+
   async findByAccountId(id: number): Promise<Food[]> {
     return this.foodRepository.findAll({
       where: { idOwner: id },
@@ -62,7 +77,7 @@ export class FoodService {
     });
   }
 
-  async details(idFood: number): Promise<Food> {
+  async find(idFood: number): Promise<Food> {
     return this.foodRepository.findByPk(idFood, {
       include: [
         {
@@ -107,6 +122,14 @@ export class FoodService {
       ],
       attributes: {
         exclude: ['idImage', 'idOwner'],
+      },
+    });
+  }
+
+  async findRate(idFood: number): Promise<Rate[]> {
+    return this.rateRepository.findAll({
+      where: {
+        idFood,
       },
     });
   }
