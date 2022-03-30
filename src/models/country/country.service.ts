@@ -10,6 +10,8 @@ export class CountryService {
   ) {}
 
   async findAll(): Promise<Country[]> {
-    return this.countryRepository.findAll();
+    return this.countryRepository.findAll({
+      order: ['name'],
+    });
   }
 }
