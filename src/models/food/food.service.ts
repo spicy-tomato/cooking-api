@@ -25,7 +25,7 @@ export class FoodService {
     idImage: number,
   ): Promise<Food> {
     return this.foodRepository.create({
-      ...foodDto,
+      ...foodDto.data,
       idImage,
       idOwner,
       timePost: Sequelize.fn('GETDATE'),
@@ -38,7 +38,7 @@ export class FoodService {
     image: File[],
   ): Promise<StepDetails[]> {
     return this.stepRepository.bulkCreate(
-      foodDto.steps.map((step, i) => ({
+      foodDto.data.steps.map((step, i) => ({
         ...step,
         idImage: image[i].id,
         idFood,
