@@ -23,7 +23,12 @@ export class AccountService {
   }
 
   async findOne(username: string): Promise<Account | null> {
-    return this.accountRepository.findOne({ where: { username } });
+    return this.accountRepository.findOne({
+      where: { username },
+      attributes: {
+        exclude: ['id', 'password'],
+      },
+    });
   }
 
   async setAvatar(idAccount: number, id: number): Promise<number> {

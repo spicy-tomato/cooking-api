@@ -2,8 +2,10 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   HttpException,
   HttpStatus,
+  Param,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -16,6 +18,17 @@ import { CreateAccountDto } from './dto';
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
+
+  @Get()
+  getInfo(@JwtUser() user: JwtValidateResponseDto) {
+    console.log(user);
+    return this.accountService.findOne(user.username);
+  }
+
+  @Get(':username')
+  getUserInfo(@Param('username') username: string) {
+    return this.accountService.findOne(username);
+  }
 
   @Post()
   @Public()
