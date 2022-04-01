@@ -22,11 +22,14 @@ export class AccountService {
     });
   }
 
-  async findOne(username: string): Promise<Account | null> {
+  async findOne(
+    username: string,
+    getPassword = false,
+  ): Promise<Account | null> {
     return this.accountRepository.findOne({
       where: { username },
       attributes: {
-        exclude: ['id', 'password'],
+        exclude: ['id', getPassword ? '' : 'password'],
       },
     });
   }

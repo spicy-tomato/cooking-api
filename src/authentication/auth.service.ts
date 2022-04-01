@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.accountService.findOne(username);
+    const user = await this.accountService.findOne(username, true);
 
     if (user && StringHelper.getMd5(password) === user.password) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

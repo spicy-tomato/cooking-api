@@ -6,6 +6,7 @@ import { Account } from './models/account/account.entity';
 import { Food } from './models/food/entities';
 import { File } from './models/file/entities';
 import { Country } from './models/country/country.entity';
+import { SearchDto } from './dto';
 
 @Injectable()
 export class AppService {
@@ -16,7 +17,9 @@ export class AppService {
     private readonly accountRepository: typeof Account,
   ) {}
 
-  async search(q: string): Promise<SearchResponseEntity> {
+  async search(searchDto: SearchDto): Promise<SearchResponseEntity> {
+    const { q, isVegetarian, countryCode } = searchDto;
+
     const accounts = this.accountRepository.findAll({
       limit: 5,
       attributes: {
@@ -49,6 +52,10 @@ export class AppService {
     const foods = this.foodRepository.findAll({
       limit: 5,
       where: {
+        ...(countryCode ? { countryCode } : {}),
+        ...(isVegetarian === null
+          ? {}
+          : { isVegetarian: isVegetarian === 'true' ? 1 : 0 }),
         name: {
           [Op.substring]: q,
         },
