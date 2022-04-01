@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
+import { Op } from 'sequelize';
 import { RepositoryConstant } from 'src/common/constants';
+import { SearchDto } from 'src/dto';
 import { Account } from '../account/account.entity';
 import { Country } from '../country/country.entity';
 import { File } from '../file/entities';
@@ -123,6 +125,45 @@ export class FoodService {
           },
         },
       ],
+    });
+  }
+
+  async search(searchDto: SearchDto): Promise<Food[]> {
+    const { q, isVegetarian, countryCode } = searchDto;
+
+    return this.foodRepository.findAll({
+      limit: 5,
+      where: {
+        ...(countryCode ? { countryCode } : {}),
+        ...(isVegetarian === null
+          ? {}
+          : { isVegetarian: isVegetarian === 'true' ? 1 : 0 }),
+        name: {
+          [Op.substring]: q,
+        },
+      },
+      include: [
+        {
+          model: File,
+          attributes: {
+            exclude: ['id', 'idAccount'],
+          },
+        },
+        { model: Country, as: 'country' },
+      ],
+      attributes: {
+        exclude: [
+          'idOwner',
+          'idImage',
+          'countryCode',
+          'description',
+          'timePost',
+          'ingredient',
+          'tips',
+          'rateSum',
+          'voteCount',
+        ],
+      },
     });
   }
 

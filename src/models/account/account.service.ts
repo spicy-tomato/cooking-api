@@ -34,6 +34,37 @@ export class AccountService {
     });
   }
 
+  async search(username: string) {
+    return this.accountRepository.findAll({
+      limit: 5,
+      attributes: {
+        exclude: ['password', 'idImage'],
+      },
+      where: {
+        [Op.or]: [
+          {
+            username: {
+              [Op.substring]: username,
+            },
+          },
+          {
+            fullName: {
+              [Op.substring]: username,
+            },
+          },
+        ],
+      },
+      include: [
+        {
+          model: File,
+          attributes: {
+            exclude: ['id', 'idAccount'],
+          },
+        },
+      ],
+    });
+  }
+
   async setAvatar(idAccount: number, id: number): Promise<number> {
     return this.imageRepository
       .update(
