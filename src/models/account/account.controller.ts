@@ -21,7 +21,6 @@ export class AccountController {
 
   @Get()
   getInfo(@JwtUser() user: JwtValidateResponseDto) {
-    console.log(user);
     return this.accountService.findOne(user.username);
   }
 

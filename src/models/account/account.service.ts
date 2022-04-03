@@ -29,7 +29,7 @@ export class AccountService {
     return this.accountRepository.findOne({
       where: { username },
       attributes: {
-        exclude: ['id', getPassword ? '' : 'password'],
+        exclude: [getPassword ? '' : 'password'],
       },
     });
   }
