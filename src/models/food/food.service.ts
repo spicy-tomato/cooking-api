@@ -100,6 +100,9 @@ export class FoodService {
           ],
         },
         {
+          model: Rate,
+        },
+        {
           model: Country,
           as: 'country',
         },
