@@ -160,8 +160,6 @@ export class FoodService {
           'timePost',
           'ingredient',
           'tips',
-          'rateSum',
-          'voteCount',
         ],
       },
     });
