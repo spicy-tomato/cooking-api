@@ -68,7 +68,7 @@ export class FoodService {
         exclude: ['idImage', 'idOwner'],
       },
       include: [
-        { model: Country, as: 'country' },
+        { model: Country },
         {
           model: File,
           attributes: {
@@ -131,6 +131,37 @@ export class FoodService {
     });
   }
 
+  async findRated(idOwner: number): Promise<Food[]> {
+    const ratedFoodIds = (
+      this.foodRepository.sequelize.getQueryInterface().queryGenerator as any
+    )
+      .selectQuery('Rate', {
+        attributes: ['idFood'],
+        where: { idOwner },
+      })
+      .slice(0, -1);
+
+    return this.foodRepository.findAll({
+      attributes: {
+        exclude: ['idImage', 'idOwner', 'rates'],
+      },
+      include: [
+        { model: Country },
+        {
+          model: File,
+          attributes: {
+            exclude: ['id', 'idAccount'],
+          },
+        },
+      ],
+      where: {
+        id: {
+          [Op.in]: Sequelize.literal(`(${ratedFoodIds})`),
+        },
+      },
+    });
+  }
+
   async search(searchDto: SearchDto): Promise<Food[]> {
     const { q, isVegetarian, countryCode } = searchDto;
 
@@ -170,9 +201,7 @@ export class FoodService {
 
   async findRate(idFood: number): Promise<Rate[]> {
     return this.rateRepository.findAll({
-      where: {
-        idFood,
-      },
+      where: { idFood },
     });
   }
 }

@@ -37,6 +37,11 @@ export class FoodController {
     return this.foodService.findByAccountId(idAccount);
   }
 
+  @Get('rated')
+  async getRatedFood(@JwtUser() user: JwtValidateResponseDto): Promise<Food[]> {
+    return this.foodService.findRated(user.idAccount);
+  }
+
   @Get(':id')
   async getById(@Param('id', ToNumberPipe) id: number): Promise<Food> {
     return this.foodService.find(id);
