@@ -28,8 +28,16 @@ export class AccountService {
   ): Promise<Account | null> {
     return this.accountRepository.findOne({
       where: { username },
+      include: [
+        {
+          model: File,
+          attributes: {
+            exclude: ['id', 'idAccount'],
+          },
+        },
+      ],
       attributes: {
-        exclude: [getPassword ? '' : 'password'],
+        exclude: [getPassword ? '' : 'password', 'idImage'],
       },
     });
   }
