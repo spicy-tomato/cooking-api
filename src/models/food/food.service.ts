@@ -202,6 +202,15 @@ export class FoodService {
   async findRate(idFood: number): Promise<Rate[]> {
     return this.rateRepository.findAll({
       where: { idFood },
+      include: {
+        model: Account,
+        attributes: {
+          exclude: ['password', 'idAccount', 'idImage'],
+        },
+      },
+      attributes: {
+        exclude: ['idOwner'],
+      },
     });
   }
 }
