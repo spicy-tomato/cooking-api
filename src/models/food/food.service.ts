@@ -207,6 +207,14 @@ export class FoodService {
         attributes: {
           exclude: ['password', 'idAccount', 'idImage'],
         },
+        include: [
+          {
+            model: File,
+            attributes: {
+              exclude: ['id', 'idAccount'],
+            },
+          },
+        ],
       },
       attributes: {
         exclude: ['idOwner'],
