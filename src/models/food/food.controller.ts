@@ -25,21 +25,35 @@ export class FoodController {
     private readonly uploadService: UploadService,
   ) {}
 
-  @Get()
-  async getMyFood(@JwtUser() user: JwtValidateResponseDto): Promise<Food[]> {
-    return this.foodService.findByAccountId(user.idAccount);
+  @Get('me')
+  async getMyFood(
+    @JwtUser() user: JwtValidateResponseDto,
+    @Query('page_num', ToNumberPipe) page_num: number,
+    @Query('page_size', ToNumberPipe) page_size: number,
+  ): Promise<Food[]> {
+    return this.foodService.findByAccountId(
+      user.idAccount,
+      page_num,
+      page_size,
+    );
   }
 
   @Get()
   async getByAccountId(
     @Query('id', ToNumberPipe) idAccount: number,
+    @Query('page_num', ToNumberPipe) page_num: number,
+    @Query('page_size', ToNumberPipe) page_size: number,
   ): Promise<Food[]> {
-    return this.foodService.findByAccountId(idAccount);
+    return this.foodService.findByAccountId(idAccount, page_num, page_size);
   }
 
   @Get('rated')
-  async getRatedFood(@JwtUser() user: JwtValidateResponseDto): Promise<Food[]> {
-    return this.foodService.findRated(user.idAccount);
+  async getRatedFood(
+    @JwtUser() user: JwtValidateResponseDto,
+    @Query('page_num', ToNumberPipe) page_num: number,
+    @Query('page_size', ToNumberPipe) page_size: number,
+  ): Promise<Food[]> {
+    return this.foodService.findRated(user.idAccount, page_num, page_size);
   }
 
   @Get(':id')
@@ -87,8 +101,12 @@ export class FoodController {
   }
 
   @Get(':id/rating')
-  async getRate(@Param('id', ToNumberPipe) id: number): Promise<Rate[]> {
-    return this.foodService.findRate(id);
+  async getRate(
+    @Param('id', ToNumberPipe) id: number,
+    @Query('page_num', ToNumberPipe) page_num: number,
+    @Query('page_size', ToNumberPipe) page_size: number,
+  ): Promise<Rate[]> {
+    return this.foodService.findRate(id, page_num, page_size);
   }
 
   @Post(':id/rating')

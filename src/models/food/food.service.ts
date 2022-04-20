@@ -61,7 +61,11 @@ export class FoodService {
     });
   }
 
-  async findByAccountId(id: number): Promise<Food[]> {
+  async findByAccountId(
+    id: number,
+    page_num: number,
+    page_size: number,
+  ): Promise<Food[]> {
     return this.foodRepository.findAll({
       where: { idOwner: id },
       attributes: {
@@ -76,6 +80,8 @@ export class FoodService {
           },
         },
       ],
+      offset: (page_num - 1) * page_size,
+      limit: page_size,
     });
   }
 
@@ -147,7 +153,11 @@ export class FoodService {
     });
   }
 
-  async findRated(idOwner: number): Promise<Food[]> {
+  async findRated(
+    idOwner: number,
+    page_num: number,
+    page_size: number,
+  ): Promise<Food[]> {
     const ratedFoodIds = (
       this.foodRepository.sequelize.getQueryInterface().queryGenerator as any
     )
@@ -175,6 +185,8 @@ export class FoodService {
           [Op.in]: Sequelize.literal(`(${ratedFoodIds})`),
         },
       },
+      offset: (page_num - 1) * page_size,
+      limit: page_size,
     });
   }
 
@@ -215,7 +227,11 @@ export class FoodService {
     });
   }
 
-  async findRate(idFood: number): Promise<Rate[]> {
+  async findRate(
+    idFood: number,
+    page_num: number,
+    page_size: number,
+  ): Promise<Rate[]> {
     return this.rateRepository.findAll({
       where: { idFood },
       include: {
@@ -235,6 +251,8 @@ export class FoodService {
       attributes: {
         exclude: ['idOwner'],
       },
+      offset: (page_num - 1) * page_size,
+      limit: page_size,
     });
   }
 }
