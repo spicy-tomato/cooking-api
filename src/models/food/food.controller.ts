@@ -25,7 +25,7 @@ export class FoodController {
     private readonly uploadService: UploadService,
   ) {}
 
-  @Get()
+  @Get('myfood')
   async getMyFood(@JwtUser() user: JwtValidateResponseDto,
     @Query('page_num',ToNumberPipe) page_num: number,
     @Query('page_size',ToNumberPipe) page_size:number 
