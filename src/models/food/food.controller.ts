@@ -26,27 +26,34 @@ export class FoodController {
   ) {}
 
   @Get()
-  async getMyFood(@JwtUser() user: JwtValidateResponseDto,
-    @Query('page_num',ToNumberPipe) page_num: number,
-    @Query('page_size',ToNumberPipe) page_size:number 
-    ): Promise<Food[]> {
-    return this.foodService.findByAccountId(user.idAccount,page_num,page_size);
+  async getMyFood(
+    @JwtUser() user: JwtValidateResponseDto,
+    @Query('page_num', ToNumberPipe) page_num: number,
+    @Query('page_size', ToNumberPipe) page_size: number,
+  ): Promise<Food[]> {
+    return this.foodService.findByAccountId(
+      user.idAccount,
+      page_num,
+      page_size,
+    );
   }
 
-  @Get()
+  @Get('my')
   async getByAccountId(
     @Query('id', ToNumberPipe) idAccount: number,
-    @Query('page_num',ToNumberPipe) page_num: number,
-    @Query('page_size',ToNumberPipe) page_size:number 
+    @Query('page_num', ToNumberPipe) page_num: number,
+    @Query('page_size', ToNumberPipe) page_size: number,
   ): Promise<Food[]> {
-    return this.foodService.findByAccountId(idAccount,page_num,page_size);
+    return this.foodService.findByAccountId(idAccount, page_num, page_size);
   }
 
   @Get('rated')
-  async getRatedFood(@JwtUser() user: JwtValidateResponseDto,
-    @Query('page_num',ToNumberPipe) page_num: number,
-    @Query('page_size',ToNumberPipe) page_size:number ): Promise<Food[]> {
-    return this.foodService.findRated(user.idAccount,page_num,page_size);
+  async getRatedFood(
+    @JwtUser() user: JwtValidateResponseDto,
+    @Query('page_num', ToNumberPipe) page_num: number,
+    @Query('page_size', ToNumberPipe) page_size: number,
+  ): Promise<Food[]> {
+    return this.foodService.findRated(user.idAccount, page_num, page_size);
   }
 
   @Get(':id')
@@ -96,10 +103,10 @@ export class FoodController {
   @Get(':id/rating')
   async getRate(
     @Param('id', ToNumberPipe) id: number,
-    @Query('page_num',ToNumberPipe) page_num: number,
-    @Query('page_size',ToNumberPipe) page_size:number): 
-    Promise<Rate[]> {
-    return this.foodService.findRate(id,page_num,page_size);
+    @Query('page_num', ToNumberPipe) page_num: number,
+    @Query('page_size', ToNumberPipe) page_size: number,
+  ): Promise<Rate[]> {
+    return this.foodService.findRate(id, page_num, page_size);
   }
 
   @Post(':id/rating')
