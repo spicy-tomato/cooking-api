@@ -25,7 +25,7 @@ export class FoodController {
     private readonly uploadService: UploadService,
   ) {}
 
-  @Get()
+  @Get('me')
   async getMyFood(
     @JwtUser() user: JwtValidateResponseDto,
     @Query('page_num', ToNumberPipe) page_num: number,
@@ -38,7 +38,7 @@ export class FoodController {
     );
   }
 
-  @Get('my')
+  @Get()
   async getByAccountId(
     @Query('id', ToNumberPipe) idAccount: number,
     @Query('page_num', ToNumberPipe) page_num: number,
